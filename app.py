@@ -8,9 +8,9 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("Basic Information基本資料")
 
-    weight = st.slider("Weight體重(Kg)", 35, 200, 1)
-    height = st.slider("Height高度(m)", 0.80, 2.7, 0.01)
-    age = st.slider("Age年齡", 1, 140, 1)
+    weight = st.slider("Weight體重(Kg)", 35, 200, 35)
+    height = st.slider("Height高度(m)", 0.80, 2.4, 0.80)
+    age = st.slider("Age年齡", 5, 100, 1)
     
     smoke = st.radio("Smoke(d)(曾)吸煙", ["Yes是", "No否"])
 
