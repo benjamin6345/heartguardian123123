@@ -26,7 +26,7 @@ with col2:
     
 
 
-with open("model2.pkl", 'rb') as file:
+with open("model3.pkl", 'rb') as file:
     model = pickle.load(file)
 
 def submit_actions():
