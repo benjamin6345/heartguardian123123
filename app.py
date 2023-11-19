@@ -28,7 +28,7 @@ with col2:
     physcAct = st.radio('Sport in the last 30 days過去三十天有做運動', ["Yes是", "No否"])
     veggies = st.radio('Consume vegetables every day每天吃菜', ["Yes是", "No否"])
     fruits = st.radio('Consume Fruits every day每天吃水果', ["Yes是", "No否"])
-    num_beer = st.slider('Cups of alcohol per week每週飲酒量(杯)', 1, 20, 1)
+    num_beer = st.slider('Cups of alcohol per week每週飲酒量(杯)', 0, 20, 0)
     bad_menthealth_days = st.slider('Number of days suffering for mental issues in the past 30 days過去三十天有多少天是心理狀況不佳的', 0, 30, 0)
     bad_physhealth_days = st.slider('Number of days suffering for physics issues in the past 30 days過去三十天有多少天是身體狀況不佳的', 0, 30, 0)
     
