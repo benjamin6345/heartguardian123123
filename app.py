@@ -80,15 +80,15 @@ def submit_actions():
         st.subheader('Your body condition can be vulnerable to heart disease.')
         st.subheader('你較容易患有心臟病。')
         
-        if diabetic_final == 1:
-            st.markdown('Please manage your body sugar level. 請控制身體血糖量。 \n')
-        if BMI > 23:
-            st.markdown('Please control your weight/BMI. 請控制你的體重/BMI。\n')
-        if smoker_final == 1:
-            st.write('Please stop smoking. 請不要吸煙。')
+        # if diabetic_final == 1:
+        #     st.markdown('Please manage your body sugar level. 請控制身體血糖量。 \n')
+        # if BMI > 23:
+        #     st.markdown('Please control your weight/BMI. 請控制你的體重/BMI。\n')
+        # if smoker_final == 1:
+        #     st.write('Please stop smoking. 請不要吸煙。')
             
-        if highbp_final == 1:
-            st.write('Please maintain a good lifestyle to maintain a lower blood pressure. 請保持健康的身活習慣以減低血壓。')
+        # if highbp_final == 1:
+        #     st.write('Please maintain a good lifestyle to maintain a lower blood pressure. 請保持健康的身活習慣以減低血壓。')
             
     else:
         st.subheader('Your body condition are not vulnerable to heart disease.')
