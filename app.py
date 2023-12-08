@@ -71,41 +71,43 @@ def submit_actions():
 
     arr = np.array(result).reshape(1, -1)
     y_pred = np.round(model.predict(arr))[0]
+
+    
    
 
     
     if y_pred == 1:
         st.subheader('Your body condition can be vulnerable to heart disease.')
         st.subheader('你較容易患有心臟病。')
-        
-        if diabetic_final == 1:
-            st.markdown('Please manage your body sugar level. 請控制身體血糖量。 \n')
-        if BMI > 23:
-            st.markdown('Please control your weight/BMI. 請控制你的體重/BMI。\n')
-        if smoker_final == 1:
-            st.write('Please stop smoking. 請不要吸煙。')
-            
-        if highbp_final == 1:
-            st.write('Please maintain a good lifestyle to maintain a lower blood pressure. 請保持健康的生活習慣以減低血壓。')
-
-        if highchol_final == 1:
-            st.write('Please maintain a good lifestyle to maintain a lower cholesterol level. 請保持健康的生活習慣以減低身體膽固醇含量。')
-        if fruits_final == 0:
-            st.write('Please eat fruits everyday. 請每天吃水果')
-        if veggies_final == 0:
-            st.write('Please eat vegetables everyday. 請每天吃菜')
-        if physAct_final == 0:
-            st.write('Please do more sports. 請多做運動')
-
-        if bad_menthealth_days > 10:
-            st.write('Please maintain mental health 請注意心理健康')
-
-        if bad_physhealth_days >= 10:
-            st.write('Please maintain physical health 請注意身體健康')
             
     else:
         st.subheader('Your body condition are not vulnerable to heart disease.')
         st.subheader('你較不容易患上心臟病。')
+
+    if diabetic_final == 1:
+        st.markdown('Please manage your body sugar level. 請控制身體血糖量。 \n')
+    if BMI > 23:
+        st.markdown('Please control your weight/BMI. 請控制你的體重/BMI。\n')
+    if smoker_final == 1:
+        st.write('Please stop smoking. 請不要吸煙。')
+        
+    if highbp_final == 1:
+        st.write('Please maintain a good lifestyle to maintain a lower blood pressure. 請保持健康的生活習慣以減低血壓。')
+
+    if highchol_final == 1:
+        st.write('Please maintain a good lifestyle to maintain a lower cholesterol level. 請保持健康的生活習慣以減低身體膽固醇含量。')
+    if fruits_final == 0:
+        st.write('Please eat fruits everyday. 請每天吃水果')
+    if veggies_final == 0:
+        st.write('Please eat vegetables everyday. 請每天吃菜')
+    if physAct_final == 0:
+        st.write('Please do more sports. 請多做運動')
+
+    if bad_menthealth_days > 10:
+        st.write('Please maintain mental health 請注意心理健康')
+
+    if bad_physhealth_days >= 10:
+        st.write('Please maintain physical health 請注意身體健康')
     
     
 button = st.button("Submit提交", on_click=submit_actions)
