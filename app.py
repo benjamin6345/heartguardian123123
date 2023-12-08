@@ -86,7 +86,7 @@ def submit_actions():
 
     if diabetic_final == 1:
         st.markdown('Please manage your body sugar level. 請控制身體血糖量。 \n')
-    if BMI > 23:
+    if BMI > 25:
         st.markdown('Please control your weight/BMI. 請控制你的體重/BMI。\n')
     if smoker_final == 1:
         st.write('Please stop smoking. 請不要吸煙。')
