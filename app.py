@@ -432,16 +432,15 @@ def calculate_and_adjust_value_by_inflation_rate():
     st.session_state.prev_I = cur_I
     st.session_state.resource_to_cost_mapping = res_to_cost_mapping
     st.session_state.prev_p = cur_p
+    st.session_state.first_round = True
     
 def count_killed_pieces():
     if option == '成吉思汗':
         st.session_state.player_resource_dict[player_idx]['money'] += 350
         
-if player_idx == 1 and st.session_state.first_round:
+if player_idx == 1 and not st.session_state.first_round:
     calculate_and_adjust_value_by_inflation_rate()
     st.session_state.first_round = False
-    
-    
 
 
 with col1:
