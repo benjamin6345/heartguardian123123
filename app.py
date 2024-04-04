@@ -103,7 +103,7 @@ global_player_addresource_dict = st.session_state.player_addresource_dict
 player_idx = st.session_state.player_idx
 
 if 'resource_to_cost_mapping' not in st.session_state:
-    st.session_state.resource_to_cost_mapping = {'wood':50, 'iron ore':100, 'gold':750, 'crude oil':750, 'fish':50, 'crop':50, 'meat':100, 'stone':50, 'coal':200, 'animal':50, 'steel':350, 'fine iron':300, 'gasoline':1000, 'food':150, 'building material':600}
+    st.session_state.resource_to_cost_mapping = {'wood':50, 'iron ore':100, 'gold':750, 'crude oil':750, 'fish':40, 'crop':40, 'meat':100, 'stone':50, 'coal':200, 'animal':50, 'steel':400, 'fine iron':300, 'gasoline':1000, 'food':150, 'building material':600}
 
 if 'prev_p' not in st.session_state:
     st.session_state.prev_p = 0
@@ -115,15 +115,27 @@ processing_plant_product_price_constant = {'steel':3, 'fine iron':2, 'gasoline':
 
 class resource: 
     #Initialize give how many, give what and what is the cost of that resource
-    def __init__(self, label, amount, little=False):
+    def __init__(self, label, amount, build_cost, little=False):
         self.label = label
         self.amount = amount
         self.little = little
+        self.build_cost = build_cost
         
     def display_title(self):
         st.subheader(f'{self.label.capitalize()} Resource')
-        
+    
+    def display_build(self):
+        if not self.little:
+            st.button(f'Build {self.label} Collection', on_click=self.build)
+
+    def build(self):
+        player_res = st.session_state.player_resource_dict[player_idx]
+        if player_res['money'] >= self.build_cost:
+            st.session_state.player_resource_dict[player_idx]['money'] -= self.build_cost
+            
+
     def display_button(self):
+        print(self.little, self.label)
         if not self.little:
             st.button(f'Get {self.label}', on_click=self.add_player_resource)
         else:
@@ -136,7 +148,6 @@ class resource:
         global global_player_resource_dict
         player_resource = global_player_resource_dict[player_idx]
         
-        print(self.label in player_resource, player_resource)
         if self.label in player_resource:
             player_resource[self.label] += self.amount
             
@@ -176,11 +187,12 @@ class processing_plant:
         player_resource = deepcopy(global_player_resource_dict[player_idx])
         ok = True
         
+        constant = 0.9 if option == '慈禧' else 1
         for res_name, amount in self.required_resource_map.items():
             amount = round(amount * build_constant_mapping[option], 1)
             if res_name in player_resource:
-                if player_resource[res_name] >= amount:
-                    player_resource[res_name] -= amount
+                if player_resource[res_name] >= amount*constant:
+                    player_resource[res_name] -= amount*constant
                     
                 else: #Do not have enough
                     print('Do not have enough')
@@ -359,12 +371,18 @@ def next_player():
     player_resource = global_player_resource_dict[player_idx]
     next_round_add_resource = global_player_addresource_dict[player_idx]
     
+    if st.session_state.player_resource_dict[player_idx]['money'] < 400:
+        st.session_state.player_resource_dict[player_idx]['money'] = 0
+        
+    else:
+        st.session_state.player_resource_dict[player_idx]['money'] -= 400
     
+    constant = 1.75 if option == '爱迪生' else 1
     for key, value in next_round_add_resource.items():
         if key in player_resource:
-            player_resource[key] += value
+            player_resource[key] += round(value*constant)
         else:
-            player_resource[key] = value
+            player_resource[key] = round(value*constant)
     
     global_player_resource_dict[player_idx] = player_resource
     st.session_state.player_resource_dict = global_player_resource_dict
@@ -414,7 +432,6 @@ def calculate_and_adjust_value_by_inflation_rate():
     st.session_state.prev_I = cur_I
     st.session_state.resource_to_cost_mapping = res_to_cost_mapping
     st.session_state.prev_p = cur_p
-        
     
 def count_killed_pieces():
     if option == '成吉思汗':
@@ -423,6 +440,9 @@ def count_killed_pieces():
 if player_idx == 1 and st.session_state.first_round:
     calculate_and_adjust_value_by_inflation_rate()
     st.session_state.first_round = False
+    
+    
+
 
 with col1:
     
@@ -433,144 +453,152 @@ with col1:
         disabled=st.session_state.disabled,
         index = st.session_state.char_idx_tuple[st.session_state.player_idx-1]
     )
-    
 
-            
     
-    wood_res = resource('wood', 12)
+    wood_res = resource('wood', 3, 500)
     wood_res.display_title()
+    wood_res.display_build()
     wood_res.display_generate_resource()
     wood_res.display_button()
     st.text("")
     st.text("")
     
-    iron_res = resource('iron ore', 3)
+    iron_res = resource('iron ore', 2, 750)
     iron_res.display_title()
+    iron_res.display_build()
     iron_res.display_generate_resource()
     iron_res.display_button()
     st.text("")
     st.text("")
     
-    gold_res = resource('gold', 2)
+    gold_res = resource('gold', 1, 2500)
     gold_res.display_title()
+    gold_res.display_build()
     gold_res.display_generate_resource()
     gold_res.display_button()
     st.text("")
     st.text("")
     
-    crude_res = resource('crude oil', 2)
+    crude_res = resource('crude oil', 1, 2000)
     crude_res.display_title()
+    crude_res.display_build()
     crude_res.display_generate_resource()
     crude_res.display_button()
     st.text("")
     st.text("")
     
-    fish_res = resource('fish', 13)
+    fish_res = resource('fish', 3, 400)
     fish_res.display_title()
+    fish_res.display_build()
     fish_res.display_generate_resource()
     fish_res.display_button()
     st.text("")
     st.text("")
     
-    crop_res = resource('crop', 13)
+    crop_res = resource('crop', 3, 400)
     crop_res.display_title()
+    crop_res.display_build()
     crop_res.display_generate_resource()
     crop_res.display_button()
     st.text("")
     st.text("")
     
-    meat_res = resource('meat', 10)
+    meat_res = resource('meat', 2, 300)
     meat_res.display_title()
+    meat_res.display_build()
     meat_res.display_generate_resource()
     meat_res.display_button()
     st.text("")
     st.text("")
     
-    stone_res = resource('stone', 13)
+    stone_res = resource('stone', 3, 300)
     stone_res.display_title()
+    stone_res.display_build()
     stone_res.display_generate_resource()
     stone_res.display_button()
     st.text("")
     st.text("")
 
-    coal_res = resource('coal', 13)
+    coal_res = resource('coal', 3, 1000)
     coal_res.display_title()
+    coal_res.display_build()
     coal_res.display_generate_resource()
     coal_res.display_button()
     st.text("")
     st.text("")
     
-    animal_res = resource('animal', 13)
+    animal_res = resource('animal', 3, 500)
     animal_res.display_title()
+    animal_res.display_build()
     animal_res.display_generate_resource()
     animal_res.display_button()
     st.text("")
     st.text("")
     
-    wood_res = resource('wood', 1, True)
+    wood_res = resource('wood', 1, 0, True)
     wood_res.display_title()
     wood_res.display_generate_resource()
     wood_res.display_button()
     st.text("")
     st.text("")
     
-    iron_res = resource('iron ore', 1, True)
+    iron_res = resource('iron ore', 1, 0, True)
     iron_res.display_title()
     iron_res.display_generate_resource()
     iron_res.display_button()
     st.text("")
     st.text("")
     
-    gold_res = resource('gold', 1, True)
+    gold_res = resource('gold', 1, 0, True)
     gold_res.display_title()
     gold_res.display_generate_resource()
     gold_res.display_button()
     st.text("")
     st.text("")
     
-    crude_res = resource('crude oil', 1, True)
+    crude_res = resource('crude oil', 1, 0, True)
     crude_res.display_title()
     crude_res.display_generate_resource()
     crude_res.display_button()
     st.text("")
     st.text("")
     
-    fish_res = resource('fish', 1, True)
+    fish_res = resource('fish', 1, 0, True)
     fish_res.display_title()
     fish_res.display_generate_resource()
     fish_res.display_button()
     st.text("")
     st.text("")
     
-    crop_res = resource('crop', 1, True)
+    crop_res = resource('crop', 1, 0, True)
     crop_res.display_title()
     crop_res.display_generate_resource()
     crop_res.display_button()
     st.text("")
     st.text("")
     
-    meat_res = resource('meat', 1, True)
+    meat_res = resource('meat', 1, 0, True)
     meat_res.display_title()
     meat_res.display_generate_resource()
     meat_res.display_button()
     st.text("")
     st.text("")
     
-    stone_res = resource('stone', 1, True)
+    stone_res = resource('stone', 1, 0, True)
     stone_res.display_title()
     stone_res.display_generate_resource()
     stone_res.display_button()
     st.text("")
     st.text("")
 
-    coal_res = resource('coal', 1, True)
+    coal_res = resource('coal', 1, 0, True)
     coal_res.display_title()
     coal_res.display_generate_resource()
     coal_res.display_button()
     st.text("")
     st.text("")
     
-    animal_res = resource('animal', 1, True)
+    animal_res = resource('animal', 1, 0, True)
     animal_res.display_title()
     animal_res.display_generate_resource()
     animal_res.display_button()
