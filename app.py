@@ -310,8 +310,11 @@ def generate_player_info(player_idx):
 bottom_right_style = """
     position: fixed;
     bottom: 0;
-    right: 0;
+    left: 0;
     padding: 10px;
+    color:green;
+    font-size:20px;
+    bold:true;
 """
 
 def buy_insurance():
