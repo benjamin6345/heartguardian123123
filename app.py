@@ -135,6 +135,8 @@ class resource:
     def add_player_resource(self):
         global global_player_resource_dict
         player_resource = global_player_resource_dict[player_idx]
+        
+        print(self.label in player_resource, player_resource)
         if self.label in player_resource:
             player_resource[self.label] += self.amount
             
@@ -505,7 +507,7 @@ with col1:
     st.text("")
     st.text("")
     
-    wood_res = resource('wood ', 5, True)
+    wood_res = resource('wood', 5, True)
     wood_res.display_title()
     wood_res.display_generate_resource()
     wood_res.display_button()
