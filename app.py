@@ -135,11 +135,12 @@ class resource:
 
     def build(self):
         player_res = st.session_state.player_resource_dict[player_idx]
+        self.build_cost *= build_constant_mapping[option]
         if player_res['money'] >= self.build_cost:
             st.session_state.player_resource_dict[player_idx]['money'] -= self.build_cost
             
             if self.label not in st.session_state.collecting_plants_dict[player_idx]:
-                st.session_state.collecting_plants_dict[player_idx][self.label] = 1
+                st.session_state.collecting_plants_dict[player_idx][self.label] = 1 
                 
             else:
                 st.session_state.collecting_plants_dict[player_idx][self.label] += 1
