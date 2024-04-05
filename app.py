@@ -196,13 +196,13 @@ class processing_plant:
         global global_player_resource_dict
         player_resource = deepcopy(global_player_resource_dict[player_idx])
         ok = True
-        
-        constant = 0.9 if option == '慈禧' else 1
+
         for res_name, amount in self.required_resource_map.items():
             amount = round(amount * build_constant_mapping[option], 1)
+            
             if res_name in player_resource:
-                if player_resource[res_name] >= amount*constant:
-                    player_resource[res_name] -= amount*constant
+                if player_resource[res_name] >= amount:
+                    player_resource[res_name] -= amount
                     
                 else: #Do not have enough
                     print('Do not have enough')
@@ -421,7 +421,6 @@ def count_killed_pieces():
 if player_idx == 1 and not st.session_state.first_round:
     calculate_and_adjust_value_by_inflation_rate()
     st.session_state.first_round = False
-
 
 with col1:
     
