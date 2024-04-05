@@ -110,9 +110,14 @@ if 'prev_p' not in st.session_state:
 
 if 'first_round' not in st.session_state:
     st.session_state.first_round = True
+
+if 'collecting_plants_dict' not in st.session_state:
+    st.session_state.collecting_plants_dict = {1:dict(), 2:dict(), 3:dict(), 4:dict()}
+    
     
 processing_plant_product_price_constant = {'steel':3, 'fine iron':2, 'gasoline':2, 'food':2, 'building material':2}
 
+resource_to_amount = {'wood':3, 'iron ore':2, 'gold':1, 'crude oil':1, 'fish':3, 'crop':3, 'meat':2, 'stone':3, 'coal':3, 'animal':3}
 class resource: 
     #Initialize give how many, give what and what is the cost of that resource
     def __init__(self, label, amount, build_cost, little=False):
@@ -133,9 +138,14 @@ class resource:
         if player_res['money'] >= self.build_cost:
             st.session_state.player_resource_dict[player_idx]['money'] -= self.build_cost
             
+            if self.label not in st.session_state.collecting_plants_dict[player_idx]:
+                st.session_state.collecting_plants_dict[player_idx][self.label] = 1
+                
+            else:
+                st.session_state.collecting_plants_dict[player_idx][self.label] += 1
+                
 
     def display_button(self):
-        print(self.little, self.label)
         if not self.little:
             st.button(f'Get {self.label}', on_click=self.add_player_resource)
         else:
@@ -268,48 +278,6 @@ class piece:
             st.session_state.player_resource_dict = global_player_resource_dict
             st.session_state.num_pieces += 1
 
-class collecting_plant:
-    def __init__(self, cost, name, res_name):
-        self.cost = cost
-        self.name = name
-        self.res_name = res_name
-    
-    def display_button(self):
-        st.button(label=f'Buy {self.name} Collection', on_click=self.buy)
-
-    def buy(self):
-        global global_player_resource_dict
-        player_resource = deepcopy(global_player_resource_dict[player_idx])
-        ok = True
-        res_name = self.name.lower()
-        amount_generated_by_plant = {'wood':20, 'iron ore':10, 'gold':5, 'crude oil':7, 'fish':20, 'crop':20, 'meat':15, 'stone':20, 'coal':20, 'animal':20}
-        
-        if player_resource['money'] >= self.cost:
-            player_resource['money'] -= self.cost
-            
-        else:
-            ok = False
-            
-        if ok:
-            global_player_resource_dict[player_idx] = player_resource
-            st.session_state.player_resource_dict = global_player_resource_dict
-            
-            if self.name not in st.session_state.resource_automating_counter[player_idx]:
-                st.session_state.resource_automating_counter[player_idx][self.res_name] = 1
-                
-            else:
-                
-                st.session_state.resource_automating_counter[player_idx][self.res_name] += 1
-                
-            global global_player_addresource_dict
-            next_round_add_resource = global_player_addresource_dict[player_idx]
-            if res_name not in next_round_add_resource:
-                next_round_add_resource[res_name] = st.session_state.resource_automating_counter[player_idx][self.res_name] * amount_generated_by_plant[self.res_name]
-                
-            else:
-                next_round_add_resource[res_name] += st.session_state.resource_automating_counter[player_idx][self.res_name] * amount_generated_by_plant[self.res_name]
-            global_player_addresource_dict[player_idx] = next_round_add_resource
-            st.session_state.player_addresource_dict = global_player_addresource_dict
 def generate_player_info(player_idx):
     player_resource = global_player_resource_dict[player_idx]
         
@@ -395,12 +363,24 @@ def next_player():
     
     
     player_idx += 1
+    #Update player idx
     if player_idx > 4:
         player_idx = 1
         
 
     st.session_state.player_idx = player_idx
     st.session_state.player_addresource_dict[player_idx] = dict()
+    
+    next_player_add_resource = st.session_state.collecting_plants_dict[player_idx]
+
+
+    for resource, amount in next_player_add_resource.items():
+        constant2 = resource_to_amount[resource]
+        if resource not in st.session_state.player_resource_dict[player_idx]:
+            st.session_state.player_resource_dict[player_idx][resource] = amount * constant2
+            
+        else:
+            st.session_state.player_resource_dict[player_idx][resource] += amount * constant2
     
 def calculate_and_adjust_value_by_inflation_rate():
     cash = 0
@@ -698,36 +678,6 @@ with col4:
     soldier_piece.display_buy_button()
     
     st.button('Buy insurance', on_click=buy_insurance)
-    
-    wood_collect = collecting_plant(500, 'Wood', 'wood')
-    wood_collect.display_button()
-    
-    iron_collect = collecting_plant(750, 'Iron', 'iron ore')
-    iron_collect.display_button()
-    
-    gold_collect = collecting_plant(2500, 'Gold', 'gold')
-    gold_collect.display_button()
-    
-    crude_collect = collecting_plant(2000, 'Crude oil', 'crude oil')
-    crude_collect.display_button()
-    
-    fish_collect = collecting_plant(400, 'Fishing', 'fish')
-    fish_collect.display_button()
-    
-    plant_collect = collecting_plant(400, 'Agriculture', 'crop')
-    plant_collect.display_button()
-    
-    hunt_collect = collecting_plant(300, 'Hunting', 'meat')
-    hunt_collect.display_button()
-    
-    stone_collect = collecting_plant(300, 'Stone', 'stone')
-    stone_collect.display_button()
-    
-    coal_collect = collecting_plant(1000, 'Coal', 'coal')
-    coal_collect.display_button()
-    
-    animal_collect = collecting_plant(500, 'Animal', 'animal')
-    animal_collect.display_button()
     
    
 with col5:
